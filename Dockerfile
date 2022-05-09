@@ -14,6 +14,9 @@ RUN cd /tmp && wget https://github.com/Kitware/CMake/releases/download/v3.20.0/c
 RUN apt-get install -y zip unzip pkg-config
 COPY vcpkg /usr/local/bin/vcpkg
 
+# Install Python3 (for some C++ libraries)
+RUN apt-get install -y python3
+
 # Apply zsh as default shell
 RUN chsh -s $(which zsh)
 
