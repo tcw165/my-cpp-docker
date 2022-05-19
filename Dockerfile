@@ -31,4 +31,4 @@ RUN apt-get install -y python3
 # Install cppinsights (required llvm-11)
 # RUN cd /projects && git clone --branch v_0.6 https://github.com/andreasfertig/cppinsights.git
 
-WORKDIR /projects
+# WORKDIR /root/projects
