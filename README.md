@@ -6,7 +6,7 @@
 Command to build an image from the Dockerfile
 
 ```
-docker build -t ubuntu:kinetic-cpp my-cpp-docker
+docker build -t ubuntu:cpp my-cpp-docker
 ```
 
 Command to create a container from the image.
@@ -14,8 +14,15 @@ Command to create a container from the image.
 ```
 docker run -it \
   --name cpp \
-  --mount type=volume,source=projects,target=/root/projects \
-  --mount type=bind,source=$(pwd)/backup,target=/root/backup \
-  ubuntu:kinetic-cpp
+  --mount type=bind,source=$(echo $HOME)/projects,target=/projects \
+  ubuntu:cpp \
   /usr/bin/zsh
 ```
+
+# Enable ssh root@localhost
+
+Find `PermitRootLogin` and change it to `PermitRootLogin yes` in `/etc/ssh/sshd_config`.
+
+Then run `service ssh start`.
+
+You could use `service --status-all` to check if ssh server is running.
