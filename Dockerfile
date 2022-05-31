@@ -15,8 +15,13 @@ RUN apt-get install -y --fix-missing \
   git \
   tar
 RUN sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
-# Apply zsh as default shell
-RUN chsh -s $(which zsh)
+# Install plugins
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+# Pull my .zshrc
+# RUN git clone https://github.com/tcw165/shell.git ~/.my-zshrc && \
+#   rm ~/.zshrc && ln -s ~/.my-zshrc/.zshrc ~/.zshrc && \
+#   # Apply zsh as default shell
+#   chsh -s $(which zsh)
 
 # Install build tools
 RUN apt-get install -y \
@@ -50,5 +55,15 @@ RUN apt-get install -y python3
 # Clean up unused packages
 RUN apt-get clean
 
+# For Clion to use Docker toolchain feature
+# Use "--build-arg UID=$(id -u)" in image building command.
+# e.g. docker build --build-arg UID=$(id -u) -t ubuntu:cpp -f Dockerfile
+ARG UID=1000
+RUN useradd -m -u ${UID} -s /bin/bash builder
+USER builder
+
 EXPOSE 22
 WORKDIR /projects
+
+# Enable SSH server on start
+CMD ["service", "ssh", "start"]
