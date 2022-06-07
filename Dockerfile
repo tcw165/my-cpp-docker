@@ -18,10 +18,10 @@ RUN sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 # Install plugins
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 # Pull my .zshrc
-# RUN git clone https://github.com/tcw165/shell.git ~/.my-zshrc && \
-#   rm ~/.zshrc && ln -s ~/.my-zshrc/.zshrc ~/.zshrc && \
-#   # Apply zsh as default shell
-#   chsh -s $(which zsh)
+RUN git clone https://github.com/tcw165/shell.git ~/.my-zshrc
+RUN rm ~/.zshrc && ln -s ~/.my-zshrc/.zshrc ~/.zshrc && \
+  # Apply zsh as default shell
+  chsh -s $(which zsh)
 
 # Install build tools
 RUN apt-get install -y \
@@ -29,12 +29,14 @@ RUN apt-get install -y \
   libssl-dev \
   ninja-build \
   autoconf \
-  automake
+  automake \
+  gdb
 RUN cd /tmp && \
     wget https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1.tar.gz && \
-    tar -zxvf cmake-3.23.1.tar.gz && cd cmake-3.23.1 \
-    && ./bootstrap && make && make install && cmake --version && \
-    rm -rf /tmp
+  tar -zxf cmake-3.23.1.tar.gz
+RUN cd /tmp/cmake-3.23.1 && \
+  ./bootstrap && make && make install
+RUN cmake --version
 
 # Retrieve the LLVM latest archive signature for later llvm installation
 RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
