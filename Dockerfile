@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt-get update
 
@@ -23,11 +23,10 @@ RUN rm ~/.zshrc && ln -s ~/.my-zshrc/.zshrc ~/.zshrc && \
   # Apply zsh as default shell
   chsh -s $(which zsh)
 
-# Install build tools
+# Install common build tools
 RUN apt-get install -y \
   build-essential \
   libssl-dev \
-  ninja-build \
   autoconf \
   automake \
   gdb
@@ -38,14 +37,14 @@ RUN cd /tmp/cmake-3.23.1 && \
   ./bootstrap && make && make install
 RUN cmake --version
 
-# Retrieve the LLVM latest archive signature for later llvm installation
-RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-RUN apt-get update && apt-get install -y lsb-release software-properties-common && apt-get update
-RUN add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main"
-RUN add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-13 main"
-# Install LLVM & clang (11)
-RUN apt-get install -y libllvm-11-ocaml-dev libllvm11 llvm-11 llvm-11-dev llvm-11-doc llvm-11-examples llvm-11-runtime 
-RUN apt-get install -y clang-11 lldb-11
+# Install C++20 compilers and libraries
+
+RUN apt-get install -y gcc-11 gcc-11-base gcc-11-doc g++-11
+RUN apt-get install -y libstdc++-11-dev libstdc++-11-doc
+
+# Install LLVM & clang (14)
+RUN apt-get install -y libllvm-14-ocaml-dev libllvm14 llvm-14 llvm-14-dev llvm-14-doc llvm-14-examples llvm-14-runtime 
+RUN apt-get install -y clang-14 lldb-14
 
 # Install VCPKG (shim that looks up vcpkg in your local repo)
 RUN apt-get install -y zip unzip pkg-config
