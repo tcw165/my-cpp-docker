@@ -10,6 +10,7 @@ RUN apt-get install -y \
 # Install on-my-zsh
 RUN apt-get install -y --fix-missing \
   zsh \
+  fzf \
   curl \
   wget \
   git \
@@ -67,4 +68,4 @@ EXPOSE 22
 WORKDIR /projects
 
 # Enable SSH server on start
-CMD ["service", "ssh", "start"]
+# CMD ["service", "ssh", "start"]
